@@ -6,13 +6,13 @@ Created on Sun Oct 27 19:09:30 2019
 
 This is a DeepQN robotics problem:
 
-A space shuttle is in a space ship hangar in free space (no gravity).
+A space shuttle is in a space ship hangar of dimension 100 x 100 in free space (no gravity).
 The goal is to get to the exit ('docking bay') as quick as possible.
 
 The space shuttle has a constant thrust. The space shuttle is able to change it orientation
 with a constant angular velocity to its left, right or stay with its orientation.
 
-At t=0 the space shuttle is at the bottom left corner of the hangar and is oriented upwards.
+At t=0 the space shuttle is at the bottom left corner of the hangar (X=10, Y=1) and is oriented upwards.
 
 An obstacle ('wall') exists in the mid of the hangar making it impossible to reach the exit 
 in the straight direction.
@@ -25,9 +25,10 @@ better than the autopilot i.e. to need less time.
 #  ... uncomment for Jupyter notebook
 #%matplotlib inline   
 
-#
-# To warm-up: Calculate and plot the solution trajectory by the naive autopilot
-#
+#################################################################################
+# To warm-up: Calculate and plot the solution trajectory by the naive autopilot #
+#################################################################################
+
 from Physics.SpaceShuttlePhysics import SpaceShuttlePhysics
 envi_demo = SpaceShuttlePhysics(runtime=100.)
 envi_demo.do_demo()
@@ -37,11 +38,13 @@ import numpy as np
 
 from DeepQ.DQNAgent import DQNAgent
 
+###################
+# Deep Q Learning #
+###################
 
 #
-# Some steering constants
+# Some steering constants ...
 #
-
 train_episodes = 2000          # max number of episodes to learn from
 max_steps = 1000               # max steps in an episode
 batch_size = 64                # experience mini-batch size
@@ -93,8 +96,8 @@ for ep in range(1, train_episodes):
 
     # Reset the simulation, setting  the shuttle again at its starting place
     envi.reset(ep)
-    envi.ang += 0.001 * np.random.randn() #* agent.epsilon # ... do some (decaying) exploration noise to start parameters
-    envi.pos[0] += 0.1 * np.random.randn()# * agent.epsilon # ... do some (decaying) exploration noise to start parameters
+    envi.ang += 0.001 * np.random.randn()  # ... do some (decaying) exploration noise to start (angle)
+    envi.pos[0] += 0.1 * np.random.randn() # ... do some (decaying) exploration noise to start (X-Position)
     state = envi.get_state()
     
     total_reward = 0.
@@ -143,9 +146,9 @@ for ep in range(1, train_episodes):
     agent.replay(batch_size)
     
     
-    
-#############################
-# 
+###################
+# Examine Results #
+# #################
     
 import matplotlib.pyplot as plt
 
